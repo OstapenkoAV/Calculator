@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var numberIds: List<Int>
     private lateinit var operationsIds: List<Int>
+    private var resetId = 0
 
     private lateinit var calculator: CalculatorLogic
     private lateinit var inputTextField: TextView
@@ -38,10 +39,10 @@ class MainActivity : AppCompatActivity() {
             R.id.division_button,
             R.id.equal_button
         )
-
         calculator = CalculatorLogic()
         inputTextField = findViewById(R.id.input_text_field)
         setOnClickListeners()
+
     }
 
     fun setOnClickListeners() {
@@ -49,18 +50,22 @@ class MainActivity : AppCompatActivity() {
             calculator.onNumberPressed(it.id)
             inputTextField.text = calculator.getText()
         }
+        for (numberBtn in numberIds) {
+            findViewById<Button>(numberBtn).setOnClickListener(numberButtonClickListener)
+        }
 
         val actionButtonClickListener = View.OnClickListener {
             calculator.onActionPressed(it.id)
             inputTextField.text = calculator.getText()
         }
 
-        for (numberBtn in numberIds) {
-            findViewById<Button>(numberBtn).setOnClickListener(numberButtonClickListener)
-        }
-
         for (actionBtn in operationsIds) {
             findViewById<Button>(actionBtn).setOnClickListener(actionButtonClickListener)
+        }
+
+        findViewById<Button>(R.id.reset_button).setOnClickListener {
+            calculator.reset()
+            inputTextField.text = calculator.getText()
         }
     }
 }
