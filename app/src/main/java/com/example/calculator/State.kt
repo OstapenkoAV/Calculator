@@ -4,6 +4,5 @@ enum class State {
     firstArgInput,
     secondArgInput,
     operationSelected,
-    showResult,
-    lastResult
+    showResult
 }
