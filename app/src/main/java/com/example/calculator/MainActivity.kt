@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     fun setOnClickListeners() {
         val numberButtonClickListener = View.OnClickListener {
             calculator.onNumberPressed(it.id)
-            inputTextField.text = calculator.getText()
+            inputTextField.text = calculator.showText()
         }
         for (numberBtn in numberIds) {
             findViewById<Button>(numberBtn).setOnClickListener(numberButtonClickListener)
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         val actionButtonClickListener = View.OnClickListener {
             calculator.onActionPressed(it.id)
-            inputTextField.text = calculator.getText()
+            inputTextField.text = calculator.showText()
         }
 
         for (actionBtn in operationsIds) {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.reset_button).setOnClickListener {
             calculator.reset()
-            inputTextField.text = calculator.getText()
+            inputTextField.text = calculator.showText()
         }
     }
 }

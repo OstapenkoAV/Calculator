@@ -21,7 +21,6 @@ class CalculatorLogic {
     }
 
     fun onNumberPressed(buttonId: Int) {
-        Log.i(TAG, lastResult.toString())
         if (state == State.showResult) {
             state = State.firstArgInput
             inputStr.setLength(0)
@@ -30,14 +29,12 @@ class CalculatorLogic {
             state = State.secondArgInput
             inputStr.setLength(0)
         }
-        if (inputStr.length < 9) {
+        if (inputStr.length < 15) {
             if (inputStr.isNotEmpty() && inputStr[0] == '0') {
                 inputStr.setLength(0)
             }
             when (buttonId) {
-                R.id.button_0 -> if (inputStr.isNotEmpty()) {
-                    inputStr.append("0")
-                }
+                R.id.button_0 -> inputStr.append("0")
                 R.id.button_1 -> inputStr.append("1")
                 R.id.button_2 -> inputStr.append("2")
                 R.id.button_3 -> inputStr.append("3")
@@ -49,48 +46,49 @@ class CalculatorLogic {
                 R.id.button_9 -> inputStr.append("9")
             }
         }
-
     }
 
     fun onActionPressed(actionId: Int) {
         if (actionId == R.id.equal_button && state == State.secondArgInput && inputStr.isNotEmpty()) {
             secondArg = inputStr.toString().toInt()
             state = State.showResult
-
             inputStr.setLength(0)
-            when (actionSelected) {
-                R.id.addition_button -> {
-                    inputStr.append(firstArg + secondArg)
-                    lastResult = inputStr.toString().toInt()
-                    Log.i(TAG, lastResult.toString())
-                }
-                R.id.subtraction_button -> {
-                    inputStr.append(firstArg - secondArg)
-                    lastResult = inputStr.toString().toInt()
-                    Log.i(TAG, lastResult.toString())
-                }
-                R.id.multiplication_button -> {
-                    inputStr.append(firstArg * secondArg)
-                    lastResult = inputStr.toString().toInt()
-                    Log.i(TAG, lastResult.toString())
-                }
-                R.id.division_button -> {
-                    inputStr.append(firstArg / secondArg)
-                    lastResult = inputStr.toString().toInt()
-                    Log.i(TAG, lastResult.toString())
-                }
-            }
-        } else {
+            lastResult = 0
+            calculate()
+        } else if (actionId != R.id.equal_button) {
             if (inputStr.isNotEmpty() && state == State.firstArgInput) {
-                state = State.operationSelected
                 firstArg = inputStr.toString().toInt()
-                inputStr.setLength(0)
-                actionSelected = actionId
+            } else if (lastResult != 0 && state == State.showResult) {
+                firstArg = lastResult
+            }
+            state = State.operationSelected
+            inputStr.setLength(0)
+            actionSelected = actionId
+        }
+    }
+
+    private fun calculate() {
+        when (actionSelected) {
+            R.id.addition_button -> {
+                inputStr.append(firstArg + secondArg)
+                lastResult = inputStr.toString().toInt()
+            }
+            R.id.subtraction_button -> {
+                inputStr.append(firstArg - secondArg)
+                lastResult = inputStr.toString().toInt()
+            }
+            R.id.multiplication_button -> {
+                inputStr.append(firstArg * secondArg)
+                lastResult = inputStr.toString().toInt()
+            }
+            R.id.division_button -> {
+                inputStr.append(firstArg / secondArg)
+                lastResult = inputStr.toString().toInt()
             }
         }
     }
 
-    fun getText(): String {
+    fun showText(): String {
         val string = StringBuilder()
         return when (state) {
             State.operationSelected -> string.append(getOperationSymbol()).toString()
@@ -110,15 +108,8 @@ class CalculatorLogic {
 
     fun reset() {
         state = State.firstArgInput
+        lastResult = 0
         inputStr.setLength(0)
         inputStr.append("0")
-    }
-
-    private fun changeState() {
-        if (state == State.firstArgInput && lastResult == 0){}
-        else if (state == State.firstArgInput ){}
-        else if (state == State.operationSelected){}
-        else if (state == State.secondArgInput){}
-        else if (state == State.showResult){}
     }
 }
